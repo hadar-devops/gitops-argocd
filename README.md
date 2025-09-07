@@ -1,37 +1,34 @@
-# step 1: run the deploy.sh file after the cluster is up 
+
+---
+
+## 2) **gitops-argocd-apps/README.md**
+
+```markdown
+# GitOps: ArgoCD Applications & Bootstrap
+
+This repository contains **ArgoCD Application and ApplicationSet manifests** used to deploy the WeatherApp.  
+It also includes a `deploy.sh` script to install ArgoCD into the EKS cluster created by the infra repo.
+
+---
+
+## Usage
+
+1. Make sure you have already run `terraform apply` in [infra-aws-eks-argocd](https://github.com/your-org/infra-aws-eks-argocd).
+2. Copy the **VPC ID** output from Terraform.
+3. Run the bootstrap script:
+
 ```bash
-#change the vpc id
-bash ./tmp_ingress/deploy.sh 
-```
-# step 2: for password
-```bash
-kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
-
-username= admin
-#ui great for sync and refresh 
+bash deploy.sh <your-vpc-id>
 ```
 
+This installs ArgoCD and registers the GitOps Applications.
 
-# step 3: for deploy the app via argocd
-```bash
-kubectl apply -f weatherapp-app.yaml
+Project Flow:
 
-```
-# step 4: for validation
-```bash 
-kubectl get ingress -n deployapp
-kubectl get pods -n deployapp
-```
+1.Terraform creates the EKS cluster in the infra repo.
 
-# step 5: running the pipeline
-```bash 
-#change the ip of node myvpc-agent to be the private ip of jenkins-agent instance
-#run the pipeline 
-```
-# step 6: install in cluster applicationset-controller and crd's
-```bash
-kubectl get deployment -n argocd argocd-applicationset-controller
+2.This repo installs ArgoCD into the cluster with deploy.sh.
 
-kubectl apply -f application-set.yaml
+3.The VPC ID from Terraform is passed as input to configure ingress properly.
 
-```
+4.ArgoCD continuously watches the helm-weatherapp-chart
