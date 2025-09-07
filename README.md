@@ -33,11 +33,5 @@ kubectl get pods -n deployapp
 kubectl get deployment -n argocd argocd-applicationset-controller
 
 kubectl apply -f application-set.yaml
- #for port fowarding- but you can use the alb instead
-kubectl port-forward service/dev-hadar-weatherapp 5000:5000 -n dev-hadar
-```
 
-# step 7: platform for creating and deleting environments
-```bash
-#-do clone from weather app deploy to a folder "platform_env" (there is already a folder weatherapp-deploy there so change it to numbers)
 ```
